@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package grpc;
+
+message Worker {
+    int32 number = 1;
+}
+
+
+message Task {
+    string username = 1;
+    string url = 2;
+    string timestamp = 3;
+}
+
+message Response {
+    string content = 1;
+    int32 success = 2;
+}
+
+message Ack {
+    string content = 1;
+}
+
+message Comment {
+    string content = 1;
+    int32 sequence = 2;
+    string url = 3;
+    int32 worker_id = 4;
+    int32 isBad = 5;
+}
+
+service Crawl {
+    rpc CreateWorker(Worker) returns (Response);
+    rpc TaskStream(Worker) returns (stream Task);
+    rpc SentTask(Task) returns (Response); 
+    rpc SendHeartbeat(Worker) returns (Ack);
+    rpc LogTask(Worker) returns (stream Task);
+    rpc ReceiveComment(Comment) returns (Response);
+}
